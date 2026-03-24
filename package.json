@@ -1,0 +1,17 @@
+{
+  "name": "nexus-icons-unified",
+  "version": "1.0.0",
+  "description": "10,000+ unified icon system combining the best open-source icon libraries",
+  "main": "index.js",
+  "keywords": ["icons", "react", "lucide", "tabler", "heroicons", "nexus"],
+  "author": "Mattlk13",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Mattlk13/nexus-icons-unified"
+  },
+  "peerDependencies": {
+    "react": "^16.8.0 || ^17.0.0 || ^18.0.0",
+    "lucide-react": "^0.263.0"
+  }
+}
