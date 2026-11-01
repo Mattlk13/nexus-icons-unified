@@ -1,9 +1,16 @@
 {
   "name": "nexus-icons-unified",
   "version": "1.0.0",
-  "description": "10,000+ unified icon system combining the best open-source icon libraries",
-  "main": "index.js",
-  "keywords": ["icons", "react", "lucide", "tabler", "heroicons", "nexus"],
+  "description": "Lucide icon lookup, NEXUS semantic aliases and static named exports",
+  "main": "./dist/index.cjs",
+  "keywords": [
+    "icons",
+    "react",
+    "lucide",
+    "tabler",
+    "heroicons",
+    "nexus"
+  ],
   "author": "Mattlk13",
   "license": "MIT",
   "repository": {
@@ -13,5 +20,34 @@
   "peerDependencies": {
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0",
     "lucide-react": "^0.263.0"
+  },
+  "module": "./dist/index.mjs",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    },
+    "./index.js": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "npm run build && node --test tests/*.test.mjs",
+    "prepack": "npm run build"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "lucide-react": "0.263.1"
   }
 }
