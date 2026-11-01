@@ -1,32 +1,30 @@
 /**
  * NEXUS Icons Unified
- * A hybrid icon system combining multiple premium icon libraries
+ * Lucide-backed dynamic lookup, NEXUS aliases and static named exports.
  * 
- * Sources:
- * - Lucide React (current) - 1000+ icons
- * - Heroicons - 200+ tailwind-designed icons  
- * - Tabler Icons - 6000+ icons
- * - Additional: Flag icons, brand icons
+ * Additional icon libraries are not wired into this package.
  * 
  * Usage:
  * import { Icon } from '@/lib/nexus-icons-unified';
  * <Icon name="sparkles" size={24} />
- * <Icon name="hero-rocket" /> // Heroicons prefix
- * <Icon name="tabler-brand-github" /> // Tabler prefix
+ * import { ArrowUpRight } from 'nexus-icons-unified'; // Static named export
  */
 
+import React from 'react';
 import * as LucideIcons from 'lucide-react';
+export * from 'lucide-react';
 
 // Icon registry - maps icon names to components
-const iconRegistry = {
-  // Re-export all Lucide icons (already installed)
-  ...Object.keys(LucideIcons).reduce((acc, key) => {
-    if (key !== 'createLucideIcon') {
-      acc[key.toLowerCase()] = LucideIcons[key];
-    }
-    return acc;
-  }, {}),
-};
+let iconRegistry;
+function getRegistry() {
+  if (!iconRegistry) {
+    iconRegistry = new Map(Object.entries(LucideIcons).filter(([name, value]) =>
+      !['createLucideIcon', 'Icon', 'icons', 'default'].includes(name) &&
+      (typeof value === 'function' || (value && typeof value === 'object' && '$$typeof' in value))
+    ).map(([name, value]) => [name.toLowerCase(), value]));
+  }
+  return iconRegistry;
+}
 
 // Additional icon sets can be added here
 // For demo, we'll use lucide as base and add custom mappings
@@ -81,20 +79,12 @@ const nexusCustomIcons = {
  * Get icon component by name
  */
 export const getIcon = (name) => {
-  // Check custom NEXUS icons first
-  if (nexusCustomIcons[name]) {
-    const lucideName = nexusCustomIcons[name];
-    return LucideIcons[lucideName];
-  }
-  
-  // Check lucide icons
-  const lucideKey = name.charAt(0).toUpperCase() + name.slice(1).replace(/-./g, x => x[1].toUpperCase());
-  if (LucideIcons[lucideKey]) {
-    return LucideIcons[lucideKey];
-  }
-  
-  // Fallback to Help Circle
-  return LucideIcons.HelpCircle;
+  if (typeof name !== 'string') return LucideIcons.HelpCircle;
+  const normalized = name.toLowerCase();
+  const alias = Object.prototype.hasOwnProperty.call(nexusCustomIcons, normalized) ? nexusCustomIcons[normalized] : null;
+  if (alias) return LucideIcons[alias] || LucideIcons.HelpCircle;
+  const registry = getRegistry();
+  return registry.get(normalized) || registry.get(normalized.replace(/-/g, '')) || LucideIcons.HelpCircle;
 };
 
 /**
@@ -153,17 +143,16 @@ export const iconCategories = {
  * Get all available icon names
  */
 export const getAvailableIcons = () => {
-  return Object.keys(iconRegistry);
+  return [...new Set([...getRegistry().keys(), ...Object.keys(nexusCustomIcons)])];
 };
 
 /**
  * Search icons by keyword
  */
-export const searchIcons = (keyword) => {
+export const searchIcons = (keyword = '') => {
+  if (typeof keyword !== 'string') return [];
   const lowerKeyword = keyword.toLowerCase();
-  return Object.keys(iconRegistry).filter(name => 
-    name.includes(lowerKeyword)
-  );
+  return getAvailableIcons().filter(name => name.includes(lowerKeyword));
 };
 
 export default Icon;
