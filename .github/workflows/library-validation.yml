@@ -9,16 +9,4 @@ concurrency:
   cancel-in-progress: true
 jobs:
   verify:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-      - run: npm ci --ignore-scripts
-      - run: npm test
-      - run: npm audit --audit-level=high
-      - run: npm pack --dry-run --ignore-scripts
+    uses: Mattlk13/nexus-ui-components/.github/workflows/reusable-library-validation.yml@b54f8a610b102e0195d69feffb69e55140226a86

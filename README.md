@@ -32,6 +32,8 @@ The pinned local browser fixture, with React external, measured 746 bytes for a 
 
 Tests use React 18.3.1 and lucide-react 0.263.1. The existing React peer range is retained; React 19, consumer page styling, icon labels/contrast and human accessibility acceptance remain separate adoption checks. No package publication or downstream migration is performed by this review branch.
 
+CI reuses the public NEXUS UI validation workflow pinned to revision `b54f8a610b102e0195d69feffb69e55140226a86`. It validates this caller's package with read-only contents permission and no inherited secrets; supplier updates require an explicit reviewed pin change.
+
 ## License
 
 MIT © Mattlk13. Lucide remains an external MIT-licensed peer dependency; retain its notices when distributing a downstream bundle.
